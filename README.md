@@ -1,15 +1,23 @@
 # sliding_up_panel
 [![pub package](https://img.shields.io/pub/v/sliding_up_panel.svg)](https://pub.dartlang.org/packages/sliding_up_panel)
+[![GitHub Stars](https://img.shields.io/github/stars/akshathjain/sliding_up_panel.svg?logo=github)](https://github.com/akshathjain/sliding_up_panel)
+[![Platform](https://img.shields.io/badge/platform-android%20|%20ios-green.svg)](https://img.shields.io/badge/platform-Android%20%7C%20iOS-green.svg)
 
-A Flutter widget that makes implementing a SlidingUpPanel much easier!
+A draggable Flutter widget that makes implementing a SlidingUpPanel much easier! Based on the Material Design bottom sheet component, this widget works on both Android & iOS.
+
+<p>
+  <img width="205px" alt="Example" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/example.gif"/>
+  <img width="220px" alt="Example App Closed" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/exampleclosed.png"/>
+  <img width="220px" alt="Example App Open" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/exampleopen.png" />
+</p>
 
 <br>
 
 ## Installing
 Add the following to your `pubspec.yaml` file:
-```
+```yaml
 dependencies:
-  sliding_up_panel: ^0.2.0
+  sliding_up_panel: ^0.3.6
 ```
 
 <br>
@@ -22,7 +30,7 @@ There are two ways which the `SlidingUpPanel` can easily be added to your projec
 <br>
 
 #### `SlidingUpPanel` as the Root (recommended)
-This method is recommended as it allows for greatest efficiency and least interference with the behavior of other UI elements. For example:
+This method is recommended as it allows for the least interference with the behavior of other UI elements. For example:
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -70,9 +78,9 @@ Widget build(BuildContext context) {
 Both methods produce the same result:
 
 <p float="left">
-  <img alt="Panel Closed" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/simpleusageclosed.png">
-  <img alt="Panel Midway" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/simpleusagemidway.png">
-  <img alt="Panel Open" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/simpleusageopen.png">
+  <img alt="Panel Closed" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/simpleusageclosed.png">
+  <img alt="Panel Midway" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/simpleusagemidway.png">
+  <img alt="Panel Open" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/simpleusageopen.png">
 </p>
 
 <br>
@@ -100,16 +108,22 @@ There are several options that allow for more control:
 | `backdropEnabled` | If non-null, shows a darkening shadow over the `body` as the panel slides open. |
 | `backdropColor` | Shows a darkening shadow of this Color over the `body` as the panel slides open. |
 | `backdropOpacity` | The opacity of the backdrop when the panel is fully open. This value can range from 0.0 to 1.0 where 0.0 is completely transparent and 1.0 is completely opaque. |
+| `backdropTapClosesPanel` | Flag that indicates whether or not tapping the backdrop closes the panel. Defaults to true. |
 | `controller` | If non-null, this can be used to control the state of the panel. |
 | `onPanelSlide` | If non-null, this callback is called as the panel slides around with the current position of the panel. The position is a double between 0.0 and 1.0 where 0.0 is fully collapsed and 1.0 is fully open. |
 | `onPanelOpened` | If non-null, this callback is called when the panel is fully opened. |
-| `onPanelCollapsed` | If non-null, this callback is called when the panel is fully collapsed. |
+| `onPanelClosed` | If non-null, this callback is called when the panel is fully collapsed. |
+| `parallaxEnabled` | If non-null and true, the SlidingUpPanel exhibits a parallax effect as the panel slides up. Essentially, the body slides up as the panel slides up. |
+| `parallaxOffset` | Allows for specifying the extent of the parallax effect in terms of the percentage the panel has slid up/down. Recommended values are within 0.0 and 1.0 where 0.0 is no parallax and 1.0 mimics a one-to-one scrolling effect. Defaults to a 10% parallax. |
+| `isDraggable` | Allows toggling of draggability of the SlidingUpPanel. Set this to false to prevent the user from being able to drag the panel up and down. Defaults to true. |
+| `slideDirection` | Either `SlideDirection.UP` or `SlideDirection.DOWN`. Indicates which way the panel should slide. Defaults to `UP`. If set to `DOWN`, the panel attaches itself to the top of the screen and is fully opened when the user swipes down on the panel. |
+| `defaultPanelState` | The default state of the panel; either PanelState.OPEN or `PanelState.CLOSED`. This value defaults to `PanelState.CLOSED` which indicates that the panel is in the closed position and must be opened. `PanelState.OPEN` indicates that by default the Panel is open and must be swiped closed by the user. |
 
 <br>
 <br>
 
 ### Darkening the Body as the Panel Opens
-If desired, the `body` can be darkened as the panel is opened by setting `backdropEnabled` to `true`. You can also customize the `backdropColor` and the `backdropOpacity`. For example:
+If desired, the `body` can be darkened as the panel is opened by setting `backdropEnabled` to `true`. You can also customize the `backdropColor`, `backdropOpacity`, and `backdropTapClosesPanel`. For example:
 
 ```dart
 @override
@@ -132,11 +146,12 @@ Widget build(BuildContext context){
   );
 }
 ```
+Notice how the `Scaffold` is nested inside of the `SlidingUpPanel`. This because the backdrop is rendered only over the `body` of the `SlidingUpPanel`. As a result, if we want the `backdrop` to appear over the `AppBar`, then we *must* nest the `Scaffold` this way.
 
 <p float="left">
-  <img alt="Panel Closed" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/backdropclosed.png">
-  <img alt="Panel Midway" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/backdropmidway.png">
-  <img alt="Panel Open" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/backdropopen.png">
+  <img alt="Panel Closed" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/backdropclosed.png">
+  <img alt="Panel Midway" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/backdropmidway.png">
+  <img alt="Panel Open" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/backdropopen.png">
 </p>
 
 <br>
@@ -174,9 +189,9 @@ Widget build(BuildContext context) {
 ```
 
 <p float="left">
-  <img alt="Panel Closed" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/collapsedpanelclosed.png">
-  <img alt="Panel Midway" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/collapsedpanelmidway.png">
-  <img alt="Panel Open" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/collapsedpanelopen.png">
+  <img alt="Panel Closed" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/collapsedpanelclosed.png">
+  <img alt="Panel Midway" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/collapsedpanelmidway.png">
+  <img alt="Panel Open" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/collapsedpanelopen.png">
 </p>
 
 <br>
@@ -227,9 +242,9 @@ Widget build(BuildContext context) {
 ```
 
 <p float="left">
-  <img alt="Panel Closed" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/borderclosed.png">
-  <img alt="Panel Midway" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/bordermidway.png">
-  <img alt="Panel Open" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/borderopen.png">
+  <img alt="Panel Closed" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/borderclosed.png">
+  <img alt="Panel Midway" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/bordermidway.png">
+  <img alt="Panel Open" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/borderopen.png">
 </p>
 
 <br>
@@ -295,9 +310,9 @@ Widget _floatingPanel(){
 Note that a similar effect can be created by simply adding a `margin` to the `SlidingUpPanel`.
 
 <p float="left">
-  <img alt="Panel Closed" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/floatingclosed.png">
-  <img alt="Panel Midway" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/floatingmidway.png">
-  <img alt="Panel Open" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/floatingopen.png">
+  <img alt="Panel Closed" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/floatingclosed.png">
+  <img alt="Panel Midway" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/floatingmidway.png">
+  <img alt="Panel Open" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/floatingopen.png">
 </p>
 
 <br>
@@ -344,18 +359,18 @@ Widget _scrollingList(){
 ```
 
 <p float="left">
-  <img alt="Panel Closed" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/scrollclosed.png">
-  <img alt="Panel Midway" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/scrollmidway.png">
-  <img alt="Panel Open" width="250px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/scrollopen.png">
+  <img alt="Panel Closed" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/scrollclosed.png">
+  <img alt="Panel Midway" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/scrollmidway.png">
+  <img alt="Panel Open" width="217px" src="https://raw.githubusercontent.com/akshathjain/sliding_up_panel/master/screenshots/scrollopen.png">
 </p>
 
 <br>
 <br>
 
 ### Using the `PanelController`
-At times, it can be useful to manually change the state of the `SlidingUpPanel`. This can be easily achieved by using a `PanelController` and attaching it to an instance of the `SlidingUpPanel`.
+At times, it can be useful to manually change the state of the `SlidingUpPanel`. This can be easily achieved by using a `PanelController` and attaching it to an instance of the `SlidingUpPanel`. Note that since the `PanelController` modifies the state of a `SlidingUpPanel`, these methods can *only* be called after the `SlidingUpPanel` has been rendered.
 
- Methods| Description |
+|  Methods  | Description |
 |-----------|-------------|
 |`open()`| Opens the sliding panel fully (i.e. to the  `maxHeight`) |
 |`close()`| Closes the sliding panel to its collapsed state (i.e. to the  `minHeight`) |
@@ -366,7 +381,7 @@ At times, it can be useful to manually change the state of the `SlidingUpPanel`.
 |`getPanelPosition()`| Gets the current panel position. Returns the % offset from collapsed state to the open state as a decimal between 0.0 and 1.0 where 0.0 is fully collapsed and 1.0 is full open. |
 |`isPanelAnimating()`| Returns whether or not the panel is currently animating. |
 |`isPanelOpen()`| Returns whether or not the panel is open. |
-|`isPanelCollapsed()`| Returns whether or not the panel is collapsed.|
+|`isPanelClosed()`| Returns whether or not the panel is collapsed.|
 |`isPanelShown()`| Returns whether or not the panel is shown/hidden.|
 
 ```dart
